@@ -45,7 +45,15 @@ router.get("/", async (req, res) => {
         const endIndex = page * limit;
 
         let hasNext;
-        const count = await Post.countDocuments();
+
+        let tagCondition = {};
+        if (selectedTag) {
+            tagCondition = {
+                tag: selectedTag
+            };
+        }
+
+        const count = await Post.countDocuments(tagCondition);
 
         if (endIndex < count) {
             hasNext = true;
