@@ -10,6 +10,7 @@ import AskQuestion from './Pages/AskQuestion';
 import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import API from './Network';
+import ViewQuestion from './Pages/ViewQuestion';
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -35,6 +36,7 @@ const App = () => {
       <Header token={token} setToken={setToken} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <Routes>
         <Route exact path="/" element={<Home searchQuery={searchQuery} />} />
+        <Route exact path="/viewQuestion" element={<ViewQuestion />} />
         {
           token ?
             <>

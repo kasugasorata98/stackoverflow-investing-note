@@ -4,6 +4,8 @@ const Constants = {
         tag: '#E1ECF4',
         postList: '#FDF7E2',
         selectedTag: 'green',
+        blue: '#495BC9',
+        gray: '#555555'
     }
 };
 

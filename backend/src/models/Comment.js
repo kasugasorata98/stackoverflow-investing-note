@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const SchemaTypes = mongoose.Schema.Types;
 const Schema = mongoose.Schema;
 const User = require("./User");
-const Question = require("./Question");
+const Post = require("./Post");
 
 const commentSchema = new Schema(
     {
@@ -11,10 +11,14 @@ const commentSchema = new Schema(
             ref: User,
             required: true,
         },
-        question: {
+        post: {
             type: SchemaTypes.ObjectId,
-            ref: Question,
+            ref: Post,
             required: true,
+        },
+        isAnswer: {
+            type: Boolean,
+            default: false
         },
         content: {
             type: String,

@@ -83,6 +83,7 @@ router.get("/", async (req, res) => {
             .limit(limit)
             .skip(startIndex)
             .select('title tag createdAt user')
+            .sort('-createdAt')
             .populate({
                 path: "user",
                 select: "username -_id"
@@ -97,6 +98,68 @@ router.get("/", async (req, res) => {
     }
     catch (err) {
         console.log("Get Post", err);
+        return res.status(Constants.HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            message: Constants.ERROR_MESSAGES.SOMETHING_WENT_WRONG
+        });
+    }
+});
+
+router.get("/getPostOwnership", authenticateToken, async (req, res) => {
+    try {
+        const user_id = req.user_id;
+        const { _id } = req.query;
+        const post = await Post.findOne({
+            _id,
+            user: user_id
+        })
+            .populate({
+                path: "user",
+                select: "username -_id"
+            });
+        if (post) {
+            return res.status(Constants.HTTP_STATUS_CODES.OK)
+                .json({
+                    ownership: true,
+                    owner: post.user.username
+                });
+        }
+        else {
+            return res.status(Constants.HTTP_STATUS_CODES.OK)
+                .json({
+                    ownership: false
+                });
+        }
+    }
+    catch (err) {
+        console.log("getPostOwnership", err);
+        return res.status(Constants.HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            message: Constants.ERROR_MESSAGES.SOMETHING_WENT_WRONG
+        });
+    }
+});
+
+router.get("/getOne", async (req, res) => {
+    try {
+        const { _id } = req.query;
+        const post = await Post.findById(_id).populate({
+            path: "user",
+            select: "username -_id"
+        });
+        if (post) {
+            return res.status(Constants.HTTP_STATUS_CODES.OK)
+                .json({
+                    post,
+                });
+        }
+        else {
+            return res.status(Constants.HTTP_STATUS_CODES.NOT_FOUND)
+                .json({
+                    message: Constants.ERROR_MESSAGES.POST_BODY_INVALID
+                });
+        }
+    }
+    catch (err) {
+        console.log("getOne", err);
         return res.status(Constants.HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             message: Constants.ERROR_MESSAGES.SOMETHING_WENT_WRONG
         });
