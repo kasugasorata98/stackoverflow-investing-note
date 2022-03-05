@@ -3,6 +3,7 @@ const router = express.Router();
 const Constants = require("../../constants/constants");
 const Post = require("../../models/Post");
 const { authenticateToken } = require("../../utils/jwt");
+const jwt = require("jsonwebtoken");
 
 router.post("/", authenticateToken, async (req, res) => {
     const user_id = req.user_id;
@@ -104,13 +105,30 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/getPostOwnership", authenticateToken, async (req, res) => {
+router.get("/getPostOwnership", async (req, res) => {
     try {
-        const user_id = req.user_id;
+        let user_id;
+        const authHeader = req.headers["authorization"];
+        const token = authHeader && authHeader.split(" ")[1];
+        if (token) {
+            user_id = await new Promise((resolve, reject) => {
+                jwt.verify(token, process.env.TOKEN_SECRET, (err, data) => {
+                    if (err) {
+                        // if error it just means that the user isnt logged in
+                        return resolve(null);
+                    }
+                    return resolve(data.id);
+                });
+            });
+        }
+
         const { _id } = req.query;
-        const post = await Post.findOne({
+        const isOwner = await Post.exists({
             _id,
             user: user_id
+        });
+        const post = await Post.findOne({
+            _id,
         })
             .populate({
                 path: "user",
@@ -119,7 +137,7 @@ router.get("/getPostOwnership", authenticateToken, async (req, res) => {
         if (post) {
             return res.status(Constants.HTTP_STATUS_CODES.OK)
                 .json({
-                    ownership: true,
+                    ownership: isOwner,
                     owner: post.user.username
                 });
         }

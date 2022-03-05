@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require('cors');
 const app = express();
-const port = 3001;
+const port = 4001;
 
 (async function main() {
     await mongoose.connect(process.env.mongodbConnectionString);

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import API from '../../Network';
 import { useNavigate } from "react-router-dom";
 
-const Login = ({ setToken }) => {
+const Login = React.memo(({ setToken, setAlert, setUsername: setUsername2 }) => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -17,9 +17,22 @@ const Login = ({ setToken }) => {
                 localStorage.setItem('token', res.token);
                 navigate("/");
                 setToken(res.token);
+                setAlert(prevAlert => ({
+                    ...prevAlert,
+                    message: 'Log in successful',
+                    severity: 'success',
+                    open: true
+                }));
+                setUsername2(res.username);
             })
             .catch(err => {
                 console.log(err);
+                setAlert(prevAlert => ({
+                    ...prevAlert,
+                    message: err.message,
+                    severity: 'error',
+                    open: true
+                }));
             });
     }
     return (
@@ -67,6 +80,6 @@ const Login = ({ setToken }) => {
             </Paper>
         </Container>
     );
-};
+});
 
 export default Login;

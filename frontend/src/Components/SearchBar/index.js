@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import { InputBase } from '@mui/material';
 
-const SearchBar = ({ setSearchQuery, searchQuery }) => {
+const SearchBar = React.memo(({ setSearchQuery, searchQuery }) => {
 
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -59,6 +59,6 @@ const SearchBar = ({ setSearchQuery, searchQuery }) => {
             />
         </Search>
     );
-};
+});
 
 export default SearchBar;

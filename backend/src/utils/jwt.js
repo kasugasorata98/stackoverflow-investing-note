@@ -4,13 +4,11 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null) {
-        console.log("Token not found");
         return res.sendStatus(401);
     }
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, data) => {
         if (err) {
-            console.log(err.message);
             return res.sendStatus(403);
         }
         req.user_id = data.id;

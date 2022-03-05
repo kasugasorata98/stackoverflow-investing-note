@@ -2,7 +2,7 @@ import { Button, Container, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import API from '../../Network';
 
-const SignUp = () => {
+const SignUp = React.memo(({ setAlert }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     function signUp(event) {
@@ -12,9 +12,21 @@ const SignUp = () => {
             .register(username, password)
             .then(res => {
                 console.log(res);
+                setAlert(prevAlert => ({
+                    ...prevAlert,
+                    severity: 'success',
+                    message: res.message,
+                    open: true
+                }));
             })
             .catch(err => {
                 console.log(err);
+                setAlert(prevAlert => ({
+                    ...prevAlert,
+                    severity: 'error',
+                    message: err.message,
+                    open: true
+                }));
             });
     }
     return (
@@ -62,6 +74,6 @@ const SignUp = () => {
             </Paper>
         </Container>
     );
-};
+});
 
 export default SignUp;

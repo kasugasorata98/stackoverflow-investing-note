@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Constants = require("../../constants/constants");
-const Comment = require("../../models/comment");
+const Comment = require("../../models/Comment");
 const Post = require("../../models/Post");
 const { authenticateToken } = require("../../utils/jwt");
 

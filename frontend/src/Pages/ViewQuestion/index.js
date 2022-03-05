@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
+import { Divider, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useCallback, useEffect, useState } from 'react';
 import Constants from '../../Constants';
@@ -6,7 +6,7 @@ import API from '../../Network';
 import { useLocation } from "react-router-dom";
 import Comment from '../../Components/Comment';
 
-const ViewQuestion = () => {
+const ViewQuestion = React.memo(({ setAlert }) => {
     const location = useLocation();
     const { id } = location.state;
 
@@ -71,6 +71,15 @@ const ViewQuestion = () => {
         if (e.keyCode === 13 && !e.shiftKey) {
             e.preventDefault();
             const token = localStorage.getItem('token');
+            if (!token) {
+                setAlert(prevAlert => ({
+                    ...prevAlert,
+                    message: 'You must be logged in to comment',
+                    severity: 'error',
+                    open: true
+                }));
+                return;
+            }
             API(token)
                 .comment(post._id, comment)
                 .then(res => {
@@ -128,8 +137,8 @@ const ViewQuestion = () => {
                     </Grid>
                     <Grid sx={{ mt: 1 }} item xs={12}>
                         {
-                            comments.map((comment, index) => {
-                                return <Comment key={index} owner={owner} isOwner={isOwner} comment={comment} />;
+                            comments.map((comment) => {
+                                return <Comment key={comment._id} owner={owner} isOwner={isOwner} comment={comment} />;
                             })
                         }
                     </Grid>
@@ -137,6 +146,6 @@ const ViewQuestion = () => {
             </Grid>
         </Box>
     );
-};
+});
 
 export default ViewQuestion;

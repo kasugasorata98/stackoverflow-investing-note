@@ -3,10 +3,17 @@ import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Button, Box } from '@mui/material';
 import SearchBar from '../SearchBar';
 
-const Header = ({ token, setToken, setSearchQuery, searchQuery }) => {
+const Header = React.memo(({ token, setToken, setSearchQuery, searchQuery, setAlert, setUsername }) => {
     function handleLogout() {
         localStorage.removeItem('token');
         setToken(null);
+        setAlert(prevAlert => ({
+            ...prevAlert,
+            severity: 'success',
+            message: 'Log out successful',
+            open: true
+        }));
+        setUsername('');
     }
 
     return (
@@ -41,6 +48,6 @@ const Header = ({ token, setToken, setSearchQuery, searchQuery }) => {
             </Toolbar>
         </AppBar>
     );
-};
+});
 
 export default Header;

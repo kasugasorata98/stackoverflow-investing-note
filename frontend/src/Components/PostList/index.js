@@ -1,9 +1,9 @@
-import { Box, Grid, Link, Typography } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Constants from '../../Constants';
 
-const PostList = ({ post }) => {
+const PostList = React.memo(({ post }) => {
     return (
         <>
             <Grid container sx={{
@@ -66,6 +66,6 @@ const PostList = ({ post }) => {
             </Grid>
         </>
     );
-};
+});
 
 export default PostList;

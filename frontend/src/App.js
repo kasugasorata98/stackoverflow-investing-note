@@ -11,10 +11,21 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import API from './Network';
 import ViewQuestion from './Pages/ViewQuestion';
+import Toast from './Components/Toast';
+
 
 const App = () => {
   const [token, setToken] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [username, setUsername] = useState('');
+
+  // for alert
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+    duration: 3000
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -24,6 +35,7 @@ const App = () => {
         .then(res => {
           console.log(res);
           setToken(res.token);
+          setUsername(res.username);
         })
         .catch(err => {
           console.log(err);
@@ -33,19 +45,20 @@ const App = () => {
 
   return (
     <Router>
-      <Header token={token} setToken={setToken} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Header token={token} setToken={setToken} searchQuery={searchQuery} setSearchQuery={setSearchQuery} setAlert={setAlert} setUsername={setUsername} />
+      <Toast alert={alert} setAlert={setAlert} />
       <Routes>
-        <Route exact path="/" element={<Home searchQuery={searchQuery} />} />
-        <Route exact path="/viewQuestion" element={<ViewQuestion />} />
+        <Route exact path="/" element={<Home searchQuery={searchQuery} setAlert={setAlert} username={username} />} />
+        <Route exact path="/viewQuestion" element={<ViewQuestion setAlert={setAlert} />} />
         {
           token ?
             <>
-              <Route exact path="/askQuestion" element={<AskQuestion />} />
+              <Route exact path="/askQuestion" element={<AskQuestion setAlert={setAlert} />} />
             </>
             :
             <>
-              <Route exact path="/login" element={<Login setToken={setToken} />} />
-              <Route exact path="/signUp" element={<SignUp />} />
+              <Route exact path="/login" element={<Login setToken={setToken} setAlert={setAlert} setUsername={setUsername} />} />
+              <Route exact path="/signUp" element={<SignUp setAlert={setAlert} />} />
             </>
         }
       </Routes>

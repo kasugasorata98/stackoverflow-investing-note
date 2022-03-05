@@ -4,13 +4,19 @@ import React, { useState } from 'react';
 import Constants from '../../Constants';
 import API from '../../Network';
 
-const AskQuestion = () => {
+const AskQuestion = React.memo(({ setAlert }) => {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
-    const [tag, setTag] = useState('Javascript');
+    const [tag, setTag] = useState('Select a Tag');
 
     function handlePost() {
-        if (!title || !body) {
+        if (!title || !body || tag === 'Select a Tag') {
+            setAlert(prevAlert => ({
+                ...prevAlert,
+                severity: 'error',
+                message: 'Title, Body & Tag are requirements to post',
+                open: true
+            }));
             return;
         }
 
@@ -20,7 +26,13 @@ const AskQuestion = () => {
             .then(res => {
                 setTitle('');
                 setBody('');
-                setTag('Javascript');
+                setTag('Select');
+                setAlert(prevAlert => ({
+                    ...prevAlert,
+                    severity: 'success',
+                    message: 'Your question has been posted',
+                    open: true
+                }));
             })
             .catch(err => {
                 console.log(err);
@@ -98,6 +110,7 @@ const AskQuestion = () => {
                             value={tag}
                             onChange={(event) => setTag(event.target.value)}
                         >
+                            <MenuItem value={"Select a Tag"}>Select a Tag</MenuItem>
                             <MenuItem value={"Javascript"}>Javascript</MenuItem>
                             <MenuItem value={"Ruby"}>Ruby</MenuItem>
                             <MenuItem value={"Java"}>Java</MenuItem>
@@ -111,6 +124,6 @@ const AskQuestion = () => {
             </Grid>
         </Box>
     );
-};
+});
 
 export default AskQuestion;

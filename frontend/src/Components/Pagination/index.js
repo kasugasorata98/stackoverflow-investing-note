@@ -1,7 +1,7 @@
 import { TablePagination } from '@mui/material';
 import React from 'react';
 
-const Pagination = ({ data, page, limit, setPage, setLimit }) => {
+const Pagination = React.memo(({ data, page, limit, setPage, setLimit }) => {
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -20,6 +20,6 @@ const Pagination = ({ data, page, limit, setPage, setLimit }) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
         />
     );
-};
+});
 
 export default Pagination;

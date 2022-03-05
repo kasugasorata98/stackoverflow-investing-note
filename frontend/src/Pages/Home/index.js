@@ -1,12 +1,13 @@
 import { Box, Grid, Paper, Typography, Divider, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
 import Pagination from '../../Components/Pagination';
 import PostList from '../../Components/PostList';
 import Constants from '../../Constants';
 import API from '../../Network';
+import { useNavigate } from "react-router-dom";
 
-const Home = ({ searchQuery }) => {
+const Home = React.memo(({ searchQuery, setAlert, username }) => {
+    const navigate = useNavigate();
     const [data, setData] = useState({
         posts: [],
         hasNext: false,
@@ -52,6 +53,11 @@ const Home = ({ searchQuery }) => {
                         width: '60%',
                         padding: 2,
                     }}>
+                    <Grid item>
+                        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                            Welcome back, {username}
+                        </Typography>
+                    </Grid>
                     <Grid
                         direction="row"
                         justifyContent="space-between"
@@ -63,7 +69,20 @@ const Home = ({ searchQuery }) => {
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <Button component={Link} to="/askQuestion" sx={{ textTransform: 'none' }} color="inherit">Ask a question</Button>
+                            <Button onClick={() => {
+                                const token = localStorage.getItem('token');
+                                if (token) {
+                                    navigate("/askQuestion");
+                                }
+                                else {
+                                    setAlert(prevAlert => ({
+                                        ...prevAlert,
+                                        message: 'You must be logged in to ask a question',
+                                        severity: 'error',
+                                        open: true
+                                    }));
+                                }
+                            }} sx={{ textTransform: 'none' }} color="inherit">Ask a question</Button>
                         </Grid>
                     </Grid>
                     <Grid sx={{
@@ -96,6 +115,7 @@ const Home = ({ searchQuery }) => {
                                                 else {
                                                     setSelectedTag(tag);
                                                 }
+                                                setPage(0);
                                             }} component={'button'} variant="h7" sx={{
                                                 fontSize: 12,
                                                 backgroundColor: selectedTag === tag ? Constants.colors.selectedTag : Constants.colors.tag,
@@ -129,7 +149,7 @@ const Home = ({ searchQuery }) => {
 
     );
 
-};
+});
 
 
 export default Home;

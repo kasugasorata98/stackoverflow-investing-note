@@ -12,13 +12,14 @@ router.post("/", async (req, res) => {
         if (token) {
             try {
                 const result = await verifyToken(token);
-                const userExists = await User.exists({
+                const user = await User.findOne({
                     _id: result.id
                 });
-                if (userExists) {
+                if (user) {
                     return res.status(Constants.HTTP_STATUS_CODES.OK).json({
                         message: Constants.SUCCESS_MESSAGES.LOGIN_SUCCESSFUL,
-                        token
+                        token,
+                        username: user.username
                     });
                 }
                 else {
@@ -49,7 +50,8 @@ router.post("/", async (req, res) => {
                     const token = generateToken(user._id);
                     return res.status(Constants.HTTP_STATUS_CODES.OK).json({
                         message: Constants.SUCCESS_MESSAGES.LOGIN_SUCCESSFUL,
-                        token
+                        token,
+                        username
                     });
                 }
                 else {

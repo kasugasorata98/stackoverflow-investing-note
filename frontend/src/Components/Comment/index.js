@@ -1,9 +1,9 @@
-import { Checkbox, FormControlLabel, FormGroup, Grid, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Checkbox, Grid, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import Constants from '../../Constants';
 import API from '../../Network';
 
-const Comment = ({ comment, isOwner, owner }) => {
+const Comment = React.memo(({ comment, isOwner, owner }) => {
     const [isAnswer, setIsAnswer] = useState(comment.isAnswer);
 
     function markAsAnswer(e) {
@@ -25,7 +25,7 @@ const Comment = ({ comment, isOwner, owner }) => {
             justifyContent="space-between"
             alignItems="center"
             container>
-            <Grid item sx={{ flexGrow: 1 }}>
+            <Grid xs={10.5} item sx={{ flexGrow: 1 }}>
                 <Grid container item xs={12}>
                     <Typography
                         sx={{ fontSize: 15, color: Constants.colors.blue }}
@@ -36,9 +36,8 @@ const Comment = ({ comment, isOwner, owner }) => {
                         isAnswer ?
                             <Typography
                                 sx={{
-                                    display: isOwner ? "initial" : 'none',
+
                                     fontSize: 10,
-                                    color: Constants.colors.blue,
                                     backgroundColor: 'green',
                                     borderRadius: 2,
                                     p: 0.5,
@@ -54,24 +53,31 @@ const Comment = ({ comment, isOwner, owner }) => {
                     }
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography sx={{ fontSize: 14 }} variant='h7'>{comment.content}</Typography>
+                    <Typography
+                        sx={{
+                            fontSize: 14,
+                        }}
+                        variant='h7'>
+                        <pre style={{ whiteSpace: 'pre-line' }}>
+                            {comment.content}
+                        </pre>
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography sx={{ fontSize: 12, color: Constants.colors.gray }} variant='h7'>{new Date(comment.createdAt).toLocaleString()}</Typography>
                 </Grid>
             </Grid>
             <Grid
+                xs={1.5}
                 sx={{
-                    display: isOwner ? "initial" : 'none'
+                    display: isOwner ? "initial" : 'none',
+
                 }}
-                alignItems={'center'}
-                justifyContent={'center'}
                 item>
-                <Grid item container>
+                <Grid wrap='nowrap' justifyContent={'flex-end'} item container>
                     <Typography
                         sx={{
                             fontSize: 10,
-                            color: Constants.colors.blue,
                             backgroundColor: 'green',
                             borderRadius: 2,
                             p: 0.5,
@@ -87,6 +93,6 @@ const Comment = ({ comment, isOwner, owner }) => {
             </Grid>
         </Grid>
     );
-};
+});
 
 export default Comment;
