@@ -106,9 +106,22 @@ const ViewQuestion = React.memo(({ setAlert }) => {
                         width: '60%',
                         padding: 2,
                     }}>
-                    <Grid item xs={12}>
-                        <Typography sx={{ fontWeight: 'bold' }} variant="h6">
+                    <Grid
+                        container
+                        justifyContent={'space-between'}
+                        item xs={12}>
+                        <Typography sx={{ fontWeight: 'bold' }} variant="h7">
                             {post.title}
+                        </Typography>
+                        <Typography variant="h7" sx={{
+                            fontSize: 12,
+                            backgroundColor: Constants.colors.tag,
+                            padding: 0.5,
+                            borderRadius: 2,
+                            pr: 1,
+                            pl: 1
+                        }}>
+                            {post.tag}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
